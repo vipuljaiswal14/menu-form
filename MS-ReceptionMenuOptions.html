@@ -43,14 +43,14 @@
     }
     tbody tr:last-child td{ border-bottom:none; }
 
-    /* Desktop column widths (match your screenshot proportions) */
-    th.col-cat, td.col-cat{ width:30%; }
-    th.col-dish, td.col-dish{ width:52%; }
+    /* Column widths */
+    th.col-cat, td.col-cat{ width:32%; }
+    th.col-dish, td.col-dish{ width:50%; }
     th.col-sel, td.col-sel{ width:8%; text-align:center; }
     th.col-score, td.col-score{ width:10%; }
 
-    .cat{ color:var(--muted); font-weight:700; font-size:12px; line-height:1.25; }
-    .cat .rule{ font-weight:600; color:#374151; }
+    .cat{ color:var(--muted); font-weight:800; font-size:12px; line-height:1.3; }
+    .cat .rule{ font-weight:700; color:#374151; display:block; margin-top:4px; }
     .lko{
       font-size:11px; padding:2px 8px; border-radius:999px;
       background:var(--chip); border:1px solid var(--chipborder);
@@ -59,25 +59,28 @@
     input[type="checkbox"]{ width:18px; height:18px; cursor:pointer; }
     .score{ font-variant-numeric:tabular-nums; }
 
-    /* Mobile: stacked, no horizontal scroll */
+    /* CRITICAL FIX: hide helper labels on desktop */
+    .mobile-cat{ display:none; }
+
+    /* Mobile: stacked; show helper */
     @media (max-width:720px){
       thead{ display:none; }
       table, tbody, tr, td{ display:block; width:100%; }
       tbody tr{ border-bottom:10px solid #f8fafc; }
       tbody td{ border-bottom:none; }
-      td.col-cat{ display:none; } /* category moves into dish cell on mobile */
+      td.col-cat{ display:none; }
       td.col-dish{ padding:12px 12px 10px; }
-      .mobile-cat{ display:block; font-size:12px; color:var(--muted); font-weight:700; margin-bottom:6px; }
-      .mobile-cat .rule{ font-weight:600; color:#374151; }
+      .mobile-cat{ display:block; font-size:12px; color:var(--muted); font-weight:800; margin-bottom:6px; }
+      .mobile-cat .rule{ font-weight:700; color:#374151; }
       td.col-sel, td.col-score{
         display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center;
         padding:10px 12px; border-top:1px solid var(--border);
       }
-      td.col-sel::before{ content:"Selected"; color:var(--muted); font-size:12px; font-weight:600; }
-      td.col-score::before{ content:"Popularity (/5)"; color:var(--muted); font-size:12px; font-weight:600; }
+      td.col-sel::before{ content:"Selected"; color:var(--muted); font-size:12px; font-weight:700; }
+      td.col-score::before{ content:"Popularity (/5)"; color:var(--muted); font-size:12px; font-weight:700; }
     }
 
-    /* Summary view */
+    /* Summary */
     .hidden{ display:none !important; }
     .summary-card{ padding:14px; }
     .summary-header{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
@@ -85,8 +88,8 @@
     .summary-meta{ color:var(--muted); font-size:12px; margin-top:6px; }
     .summary-grid{ display:grid; grid-template-columns:1fr; gap:12px; margin-top:12px; }
     .summary-box{ border:1px solid var(--border); border-radius:12px; padding:12px; background:#fff; }
-    .summary-box h3{ margin:0 0 8px; font-size:13px; color:#111827; }
-    .summary-list{ margin:0; padding-left:18px; color:#111827; }
+    .summary-box h3{ margin:0 0 8px; font-size:13px; }
+    .summary-list{ margin:0; padding-left:18px; }
     .summary-list li{ margin:6px 0; }
     .kpi{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
     .pill{ display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid var(--border); border-radius:999px; font-size:12px; color:var(--muted); background:#fff; }
@@ -94,7 +97,6 @@
 
     @media print{
       body{ background:#fff; }
-      .wrap{ max-width:none; margin:0; padding:0; }
       #editView, #editHeaderActions{ display:none !important; }
       #summaryView{ display:block !important; border:none; box-shadow:none; }
       .card{ border:none; box-shadow:none; }
@@ -106,7 +108,6 @@
 <body>
   <div class="wrap">
 
-    <!-- EDIT VIEW -->
     <header class="card" id="editView">
       <h1>Sankalp Manowara Wedding Reception Menu - Veg Gold Selection</h1>
       <div class="topbar" id="editHeaderActions">
@@ -131,7 +132,6 @@
       </div>
     </header>
 
-    <!-- SUMMARY VIEW -->
     <div class="card hidden" id="summaryView">
       <div class="summary-card">
         <div class="summary-header">
@@ -163,10 +163,10 @@
   </div>
 
 <script>
-  // Veg Gold benchmarks (locked as per hotel)
-  const categoryRules = {
+  // Hotel benchmarks (locked)
+  const parentRules = {
     "Welcome Drink": "Select 1",
-    "Vegetarian Appetizers": "Select 4",
+    "Vegetarian Appetizers": "Select 4 (Total)",
     "Soup": "Select 1",
     "Salads": "Select 3",
     "Indian Main Course": "Select 3",
@@ -180,109 +180,117 @@
     "Ice Cream": "Select 1"
   };
 
-  // Updated master list (your final additions included)
-  // Note: In starters you will still select ANY 4 TOTAL across all these options.
+  // NEW: groups restore the old structuring (Paneer/Awadhi/Fusion etc.)
+  // Each row has: parent, group, dish, lko, score
   const rows = [
     // Welcome Drink
-    { section:"Welcome Drink", dish:"Kesar Badam Milk (Warm)", lko:true, score:4.6 },
-    { section:"Welcome Drink", dish:"Hot Aam Panna", score:4.2 },
-    { section:"Welcome Drink", dish:"Strawberry Milk", score:4.0 },
-    { section:"Welcome Drink", dish:"Jaljeera (Mild)", score:4.1 },
+    { parent:"Welcome Drink", group:"Welcome Drink", dish:"Kesar Badam Milk (Warm)", lko:true, score:4.6 },
+    { parent:"Welcome Drink", group:"Welcome Drink", dish:"Hot Aam Panna", score:4.2 },
+    { parent:"Welcome Drink", group:"Welcome Drink", dish:"Strawberry Milk", score:4.0 },
+    { parent:"Welcome Drink", group:"Welcome Drink", dish:"Jaljeera (Mild)", score:4.1 },
 
-    // Vegetarian Appetizers (Select 4 total)
-    { section:"Vegetarian Appetizers", dish:"Paneer Malai Tikka", score:4.7 },
-    { section:"Vegetarian Appetizers", dish:"Paneer Amritsari", score:4.6 },
-    { section:"Vegetarian Appetizers", dish:"Paneer Kurkura", score:4.4 },
-    { section:"Vegetarian Appetizers", dish:"Paneer Pasanda", score:4.5 },
+    // Starters - Paneer
+    { parent:"Vegetarian Appetizers", group:"Vegetarian Appetizers – Paneer (within Starters)", dish:"Paneer Malai Tikka", score:4.7 },
+    { parent:"Vegetarian Appetizers", group:"Vegetarian Appetizers – Paneer (within Starters)", dish:"Paneer Amritsari", score:4.6 },
+    { parent:"Vegetarian Appetizers", group:"Vegetarian Appetizers – Paneer (within Starters)", dish:"Paneer Kurkura", score:4.4 },
+    { parent:"Vegetarian Appetizers", group:"Vegetarian Appetizers – Paneer (within Starters)", dish:"Paneer Pasanda", score:4.5 },
 
-    { section:"Vegetarian Appetizers", dish:"Veg Galouti Kebab", lko:true, score:4.6 },
-    { section:"Vegetarian Appetizers", dish:"Dahi ke Kebab", score:4.4 },
-    { section:"Vegetarian Appetizers", dish:"Hara Bhara Kebab", score:4.3 },
-    { section:"Vegetarian Appetizers", dish:"Suhal Matar", score:4.2 },
+    // Starters - Awadhi / LKO
+    { parent:"Vegetarian Appetizers", group:"Vegetarian Appetizers – Awadhi / LKO (within Starters)", dish:"Veg Galouti Kebab", lko:true, score:4.6 },
+    { parent:"Vegetarian Appetizers", group:"Vegetarian Appetizers – Awadhi / LKO (within Starters)", dish:"Dahi ke Kebab", score:4.4 },
+    { parent:"Vegetarian Appetizers", group:"Vegetarian Appetizers – Awadhi / LKO (within Starters)", dish:"Hara Bhara Kebab", score:4.3 },
+    { parent:"Vegetarian Appetizers", group:"Vegetarian Appetizers – Awadhi / LKO (within Starters)", dish:"Suhal Matar", score:4.2 },
 
-    { section:"Vegetarian Appetizers", dish:"Veg Spring Rolls", score:4.6 },
-    { section:"Vegetarian Appetizers", dish:"Crispy Fried Vegetables in Burnt Garlic Sauce", score:4.5 },
-    { section:"Vegetarian Appetizers", dish:"Paneer / Veg Momos", score:4.6 },
-    { section:"Vegetarian Appetizers", dish:"Chilli Garlic Babycorn", score:4.4 },
-    { section:"Vegetarian Appetizers", dish:"Honey Chilli Potato", score:4.5 },
+    // Starters - Fusion / Oriental / Chinese
+    { parent:"Vegetarian Appetizers", group:"Vegetarian Appetizers – Fusion / Oriental (within Starters)", dish:"Veg Spring Rolls", score:4.6 },
+    { parent:"Vegetarian Appetizers", group:"Vegetarian Appetizers – Fusion / Oriental (within Starters)", dish:"Crispy Fried Vegetables in Burnt Garlic Sauce", score:4.5 },
+    { parent:"Vegetarian Appetizers", group:"Vegetarian Appetizers – Fusion / Oriental (within Starters)", dish:"Paneer / Veg Momos", score:4.6 },
+    { parent:"Vegetarian Appetizers", group:"Vegetarian Appetizers – Fusion / Oriental (within Starters)", dish:"Chilli Garlic Babycorn", score:4.4 },
+    { parent:"Vegetarian Appetizers", group:"Vegetarian Appetizers – Fusion / Oriental (within Starters)", dish:"Honey Chilli Potato", score:4.5 },
 
     // Soup
-    { section:"Soup", dish:"Sweet Corn Vegetable Soup", score:4.4 },
-    { section:"Soup", dish:"Tomato Dhaniya Shorba", score:4.3 },
-    { section:"Soup", dish:"Hot ’n’ Sour Soup", score:4.6 },
-    { section:"Soup", dish:"Manchow Soup", score:4.5 },
+    { parent:"Soup", group:"Soup", dish:"Sweet Corn Vegetable Soup", score:4.4 },
+    { parent:"Soup", group:"Soup", dish:"Tomato Dhaniya Shorba", score:4.3 },
+    { parent:"Soup", group:"Soup", dish:"Hot ’n’ Sour Soup", score:4.6 },
+    { parent:"Soup", group:"Soup", dish:"Manchow Soup", score:4.5 },
 
-    // Salads (Select 3)
-    { section:"Salads", dish:"Green Salad", score:4.2 },
-    { section:"Salads", dish:"Russian / Waldorf Salad", score:4.3 },
-    { section:"Salads", dish:"Fruit Chaat", score:4.5 },
-    { section:"Salads", dish:"Sprout Salad", score:4.0 },
-    { section:"Salads", dish:"Pasta Salad", score:4.1 },
+    // Salads
+    { parent:"Salads", group:"Salads", dish:"Green Salad", score:4.2 },
+    { parent:"Salads", group:"Salads", dish:"Russian / Waldorf Salad", score:4.3 },
+    { parent:"Salads", group:"Salads", dish:"Fruit Chaat", score:4.5 },
+    { parent:"Salads", group:"Salads", dish:"Sprout Salad", score:4.0 },
+    { parent:"Salads", group:"Salads", dish:"Pasta Salad", score:4.1 },
 
-    // Indian Main Course (Select 3)
-    { section:"Indian Main Course", dish:"Paneer Butter Masala", score:4.8 },
-    { section:"Indian Main Course", dish:"Shahi Paneer", score:4.6 },
-    { section:"Indian Main Course", dish:"Paneer Lababdar", score:4.7 },
-    { section:"Indian Main Course", dish:"Paneer Pasanda", score:4.6 },
+    // Indian Mains - Paneer
+    { parent:"Indian Main Course", group:"Indian Main Course – Paneer", dish:"Paneer Butter Masala", score:4.8 },
+    { parent:"Indian Main Course", group:"Indian Main Course – Paneer", dish:"Shahi Paneer", score:4.6 },
+    { parent:"Indian Main Course", group:"Indian Main Course – Paneer", dish:"Paneer Lababdar", score:4.7 },
+    { parent:"Indian Main Course", group:"Indian Main Course – Paneer", dish:"Paneer Pasanda", score:4.6 },
 
-    { section:"Indian Main Course", dish:"Malai Kofta", score:4.7 },
-    { section:"Indian Main Course", dish:"Navratan Korma", score:4.6 },
-    { section:"Indian Main Course", dish:"Kaju Curry", score:4.5 },
+    // Indian Mains - Veg / Seasonal
+    { parent:"Indian Main Course", group:"Indian Main Course – Veg / Seasonal", dish:"Mix Veg Handi", score:4.3 },
+    { parent:"Indian Main Course", group:"Indian Main Course – Veg / Seasonal", dish:"Navratan Korma", score:4.6 },
+    { parent:"Indian Main Course", group:"Indian Main Course – Veg / Seasonal", dish:"Kaju Curry", score:4.5 },
+    { parent:"Indian Main Course", group:"Indian Main Course – Veg / Seasonal", dish:"Malai Kofta", score:4.7 },
 
-    { section:"Indian Main Course", dish:"Dum Aloo Banarasi", lko:true, score:4.6 },
-    { section:"Indian Main Course", dish:"Mix Veg Handi", score:4.3 },
-    { section:"Indian Main Course", dish:"Subi Lahori", lko:true, score:4.4 },
+    // Indian Mains - LKO
+    { parent:"Indian Main Course", group:"Indian Main Course – Lucknow Specials", dish:"Dum Aloo Banarasi", lko:true, score:4.6 },
+    { parent:"Indian Main Course", group:"Indian Main Course – Lucknow Specials", dish:"Subi Lahori", lko:true, score:4.4 },
 
-    // Oriental Main Course (Select 2)
-    { section:"Oriental Main Course", dish:"Vegetable Hakka Noodles", score:4.6 },
-    { section:"Oriental Main Course", dish:"Burnt Garlic Fried Rice", score:4.6 },
-    { section:"Oriental Main Course", dish:"Paneer Chilli Gravy", score:4.7 },
-    { section:"Oriental Main Course", dish:"Veg Manchurian Gravy", score:4.6 },
-    { section:"Oriental Main Course", dish:"Thai Basil Tofu / Vegetables", score:4.5 },
-    { section:"Oriental Main Course", dish:"Thai Green Curry", score:4.6 },
-    { section:"Oriental Main Course", dish:"Thai Red Curry", score:4.5 },
-    { section:"Oriental Main Course", dish:"Jasmine / Steamed Rice", score:4.4 },
+    // Oriental Mains - Noodles / Rice
+    { parent:"Oriental Main Course", group:"Oriental Main Course – Noodles / Rice", dish:"Vegetable Hakka Noodles", score:4.6 },
+    { parent:"Oriental Main Course", group:"Oriental Main Course – Noodles / Rice", dish:"Burnt Garlic Fried Rice", score:4.6 },
+    { parent:"Oriental Main Course", group:"Oriental Main Course – Noodles / Rice", dish:"Jasmine / Steamed Rice", score:4.4 },
 
-    // Lentil (Select 1)
-    { section:"Lentil", dish:"Dal Makhani", score:4.9 },
-    { section:"Lentil", dish:"Dal Tadka", score:4.3 },
-    { section:"Lentil", dish:"Panchmel Dal", score:4.4 },
+    // Oriental Mains - Gravies
+    { parent:"Oriental Main Course", group:"Oriental Main Course – Gravies", dish:"Paneer Chilli Gravy", score:4.7 },
+    { parent:"Oriental Main Course", group:"Oriental Main Course – Gravies", dish:"Veg Manchurian Gravy", score:4.6 },
 
-    // Rice Preparation (Select 1)
-    { section:"Rice Preparation", dish:"Jeera Rice", score:4.2 },
-    { section:"Rice Preparation", dish:"Veg Pulao", score:4.4 },
-    { section:"Rice Preparation", dish:"Peas Pulao", score:4.3 },
-    { section:"Rice Preparation", dish:"Veg Biryani", lko:true, score:4.6 },
+    // Oriental Mains - Thai
+    { parent:"Oriental Main Course", group:"Oriental Main Course – Thai", dish:"Thai Basil Tofu / Vegetables", score:4.5 },
+    { parent:"Oriental Main Course", group:"Oriental Main Course – Thai", dish:"Thai Green Curry", score:4.6 },
+    { parent:"Oriental Main Course", group:"Oriental Main Course – Thai", dish:"Thai Red Curry", score:4.5 },
 
-    // Yogurt Preparation (Select 1)
-    { section:"Yogurt Preparation", dish:"Boondi Raita", score:4.4 },
-    { section:"Yogurt Preparation", dish:"Mix Veg Raita", score:4.2 },
-    { section:"Yogurt Preparation", dish:"Pineapple Raita", score:4.0 },
+    // Lentil
+    { parent:"Lentil", group:"Lentil", dish:"Dal Makhani", score:4.9 },
+    { parent:"Lentil", group:"Lentil", dish:"Dal Tadka", score:4.3 },
+    { parent:"Lentil", group:"Lentil", dish:"Panchmel Dal", score:4.4 },
 
-    // Indian Breads (Assorted)
-    { section:"Indian Breads", dish:"Butter Naan", score:4.8 },
-    { section:"Indian Breads", dish:"Plain Roti", score:4.6 },
-    { section:"Indian Breads", dish:"Laccha Paratha", score:4.7 },
-    { section:"Indian Breads", dish:"Missi Roti", lko:true, score:4.5 },
-    { section:"Indian Breads", dish:"Garlic Naan", score:4.6 },
+    // Rice Preparation
+    { parent:"Rice Preparation", group:"Rice Preparation", dish:"Jeera Rice", score:4.2 },
+    { parent:"Rice Preparation", group:"Rice Preparation", dish:"Veg Pulao", score:4.4 },
+    { parent:"Rice Preparation", group:"Rice Preparation", dish:"Peas Pulao", score:4.3 },
+    { parent:"Rice Preparation", group:"Rice Preparation", dish:"Veg Biryani", lko:true, score:4.6 },
 
-    // Indian Dessert (Select 1)
-    { section:"Indian Dessert", dish:"Gajar ka Halwa (Hot)", lko:true, score:4.9 },
-    { section:"Indian Dessert", dish:"Gulab Jamun", score:4.8 },
-    { section:"Indian Dessert", dish:"Moong Dal Halwa", score:4.6 },
-    { section:"Indian Dessert", dish:"Jalebi", score:4.6 },
-    { section:"Indian Dessert", dish:"Imarti", lko:true, score:4.6 },
-    { section:"Indian Dessert", dish:"Rabdi", lko:true, score:4.7 },
+    // Yogurt
+    { parent:"Yogurt Preparation", group:"Yogurt Preparation", dish:"Boondi Raita", score:4.4 },
+    { parent:"Yogurt Preparation", group:"Yogurt Preparation", dish:"Mix Veg Raita", score:4.2 },
+    { parent:"Yogurt Preparation", group:"Yogurt Preparation", dish:"Pineapple Raita", score:4.0 },
 
-    // Western Dessert (Select 1)
-    { section:"Western Dessert", dish:"Chocolate Truffle Pastry", score:4.3 },
-    { section:"Western Dessert", dish:"Brownie with Chocolate Sauce", score:4.4 },
-    { section:"Western Dessert", dish:"Red Velvet Pastry", score:4.2 },
+    // Breads
+    { parent:"Indian Breads", group:"Indian Breads", dish:"Butter Naan", score:4.8 },
+    { parent:"Indian Breads", group:"Indian Breads", dish:"Plain Roti", score:4.6 },
+    { parent:"Indian Breads", group:"Indian Breads", dish:"Laccha Paratha", score:4.7 },
+    { parent:"Indian Breads", group:"Indian Breads", dish:"Missi Roti", lko:true, score:4.5 },
+    { parent:"Indian Breads", group:"Indian Breads", dish:"Garlic Naan", score:4.6 },
 
-    // Ice Cream (Select 1)
-    { section:"Ice Cream", dish:"Vanilla", score:4.3 },
-    { section:"Ice Cream", dish:"Strawberry", score:4.1 },
-    { section:"Ice Cream", dish:"Kesar Pista", score:4.2 },
+    // Indian Dessert
+    { parent:"Indian Dessert", group:"Indian Dessert", dish:"Gajar ka Halwa (Hot)", lko:true, score:4.9 },
+    { parent:"Indian Dessert", group:"Indian Dessert", dish:"Gulab Jamun", score:4.8 },
+    { parent:"Indian Dessert", group:"Indian Dessert", dish:"Moong Dal Halwa", score:4.6 },
+    { parent:"Indian Dessert", group:"Indian Dessert", dish:"Jalebi", score:4.6 },
+    { parent:"Indian Dessert", group:"Indian Dessert", dish:"Imarti", lko:true, score:4.6 },
+    { parent:"Indian Dessert", group:"Indian Dessert", dish:"Rabdi", lko:true, score:4.7 },
+
+    // Western Dessert
+    { parent:"Western Dessert", group:"Western Dessert", dish:"Chocolate Truffle Pastry", score:4.3 },
+    { parent:"Western Dessert", group:"Western Dessert", dish:"Brownie with Chocolate Sauce", score:4.4 },
+    { parent:"Western Dessert", group:"Western Dessert", dish:"Red Velvet Pastry", score:4.2 },
+
+    // Ice Cream
+    { parent:"Ice Cream", group:"Ice Cream", dish:"Vanilla", score:4.3 },
+    { parent:"Ice Cream", group:"Ice Cream", dish:"Strawberry", score:4.1 },
+    { parent:"Ice Cream", group:"Ice Cream", dish:"Kesar Pista", score:4.2 },
   ];
 
   const state = {}; // id -> { selected }
@@ -304,43 +312,45 @@
 
   function initState(){
     rows.forEach(r => {
-      const id = makeId(r.section + "-" + r.dish);
+      const id = makeId(r.parent + "-" + r.group + "-" + r.dish);
       state[id] = { selected:false };
     });
   }
 
-  function computeSectionCounts(){
+  function groupCounts(){
     const counts = {};
-    rows.forEach(r => counts[r.section] = (counts[r.section] || 0) + 1);
+    rows.forEach(r => counts[r.group] = (counts[r.group] || 0) + 1);
     return counts;
   }
 
   function renderTable(){
     tbody.innerHTML = "";
-    const counts = computeSectionCounts();
+    const counts = groupCounts();
     const rendered = {};
 
     rows.forEach(r => {
-      const id = makeId(r.section + "-" + r.dish);
+      const id = makeId(r.parent + "-" + r.group + "-" + r.dish);
       const st = state[id];
 
       const tr = document.createElement("tr");
 
-      if (!rendered[r.section]) {
+      if (!rendered[r.group]) {
         const tdCat = document.createElement("td");
         tdCat.className = "col-cat";
-        tdCat.rowSpan = counts[r.section];
-        const rule = categoryRules[r.section] ? ` · <span class="rule">${esc(categoryRules[r.section])}</span>` : "";
-        tdCat.innerHTML = `<div class="cat">${esc(r.section)}${rule}</div>`;
+        tdCat.rowSpan = counts[r.group];
+
+        const rule = parentRules[r.parent] ? parentRules[r.parent] : "";
+        tdCat.innerHTML = `<div class="cat">${esc(r.group)}<span class="rule">${esc(rule)}</span></div>`;
+
         tr.appendChild(tdCat);
-        rendered[r.section] = true;
+        rendered[r.group] = true;
       }
 
       const tdDish = document.createElement("td");
       tdDish.className = "col-dish";
-      const ruleMobile = categoryRules[r.section] ? categoryRules[r.section] : "";
+      const ruleMobile = parentRules[r.parent] ? parentRules[r.parent] : "";
       tdDish.innerHTML =
-        `<span class="mobile-cat">${esc(r.section)} · <span class="rule">${esc(ruleMobile)}</span></span>` +
+        `<span class="mobile-cat">${esc(r.group)} <span class="rule">· ${esc(ruleMobile)}</span></span>` +
         `<span class="dish-name">${esc(r.dish)}</span>` +
         `${r.lko ? '<span class="lko">LKO</span>' : ''}`;
       tr.appendChild(tdDish);
@@ -366,8 +376,8 @@
   function getSelections(){
     const selected = [];
     rows.forEach(r => {
-      const id = makeId(r.section + "-" + r.dish);
-      if (state[id].selected) selected.push(`${r.section}: ${r.dish}${r.lko ? " (LKO)" : ""}`);
+      const id = makeId(r.parent + "-" + r.group + "-" + r.dish);
+      if (state[id].selected) selected.push(`${r.group}: ${r.dish}${r.lko ? " (LKO)" : ""}`);
     });
     return { selected };
   }
@@ -417,9 +427,7 @@
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
-  document.getElementById("downloadPdfBtn").addEventListener("click", () => {
-    window.print(); // Save as PDF from print dialog (works across devices)
-  });
+  document.getElementById("downloadPdfBtn").addEventListener("click", () => window.print());
 
   document.getElementById("backBtn").addEventListener("click", () => {
     showEdit();
