@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Veg Gold Reception Menu – Family Selection Form</title>
+  <title>Sankalp Manowara Wedding Reception Menu - Veg Gold Selection</title>
   <style>
     :root { --border:#e5e7eb; --text:#111827; --muted:#6b7280; --bg:#ffffff; --chip:#eef2ff; }
     body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--text); background:#f8fafc; }
-    .wrap { max-width: 1050px; margin: 24px auto; padding: 0 16px 28px; }
+    .wrap { max-width: 1100px; margin: 24px auto; padding: 0 16px 28px; }
     .card { background:var(--bg); border:1px solid var(--border); border-radius:14px; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
     header.card { padding:16px 16px 12px; }
     h1 { font-size: 18px; margin:0 0 6px; }
     .meta { color:var(--muted); font-size: 13px; line-height: 1.4; }
-    .actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
+    .actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; align-items:center; }
     button, .btn {
       border: 1px solid var(--border);
       background:#fff;
@@ -41,62 +41,77 @@
     }
     tbody td { border-bottom:1px solid var(--border); padding:10px 12px; vertical-align: top; font-size: 13px; }
     tbody tr:last-child td { border-bottom:none; }
-    .cat { color: var(--muted); font-weight: 600; white-space: nowrap; }
+    .cat { color: var(--muted); font-weight: 650; white-space: nowrap; }
     .dish { display:flex; align-items:flex-start; gap:8px; }
-    .lko { font-size: 11px; padding:2px 8px; border-radius:999px; background:var(--chip); border:1px solid #c7d2fe; color:#3730a3; font-weight:600; }
+    .lko { font-size: 11px; padding:2px 8px; border-radius:999px; background:var(--chip); border:1px solid #c7d2fe; color:#3730a3; font-weight:700; }
     .muted { color: var(--muted); font-size: 12px; }
     .score { font-variant-numeric: tabular-nums; }
-    .select-col { text-align:center; }
+    .center { text-align:center; }
     input[type="checkbox"] { width: 18px; height: 18px; cursor:pointer; }
-    select {
-      width: 100%;
-      padding: 8px 10px;
-      border-radius: 10px;
-      border:1px solid var(--border);
-      background:#fff;
-      font-size: 13px;
-    }
     .footer { padding: 14px 16px; border-top:1px solid var(--border); display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
     .note { color:var(--muted); font-size: 12px; }
-    .linkbox {
-      flex: 1 1 420px;
-      display:flex; gap:10px; align-items:center;
-      background:#fff; border:1px solid var(--border);
-      border-radius: 12px; padding:10px 12px;
+    .grid { display:grid; gap:10px; grid-template-columns: 1fr; margin-top:12px; }
+    .panel { border:1px solid var(--border); background:#fff; border-radius:12px; padding:12px; }
+    .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .field { display:flex; flex-direction:column; gap:6px; min-width: 240px; flex: 1 1 260px; }
+    .field label { font-size: 12px; color:var(--muted); }
+    .field input, .field select {
+      border:1px solid var(--border); border-radius:10px; padding:10px 12px; font-size:13px;
+      outline:none;
     }
+    .linkbox { display:flex; gap:10px; align-items:center; background:#fff; border:1px solid var(--border); border-radius: 12px; padding:10px 12px; }
     .linkbox input { flex:1; border:none; outline:none; font-size: 12px; color:#111827; }
-    .divider-row td {
-      background:#fcfcfd;
-      color:#374151;
-      font-weight:700;
-      font-size:12px;
-      letter-spacing:.02em;
-    }
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <header class="card">
-      <h1>Veg Gold Reception Menu – Family Selection Form</h1>
+      <h1>Sankalp Manowara Wedding Reception Menu - Veg Gold Selection</h1>
       <div class="meta">
-        Venue: Holiday Inn Lucknow Airport (IHG) · Season: Winter Evening · Guests: ~200 · <span class="lko">LKO</span> = Lucknow speciality
+        Venue: Holiday Inn Lucknow Airport (IHG) · Winter evening · Guests ~200 · <span class="lko">LKO</span> = Lucknow speciality
       </div>
 
-      <div class="actions">
-        <button class="btn-primary" id="copyShare">Copy share link</button>
-        <button id="downloadJson">Download selections (JSON)</button>
-        <button id="clearAll">Clear all</button>
-        <span class="pill"><strong id="selCount">0</strong> selected</span>
-        <span class="pill"><strong id="recYesCount">0</strong> hotel ✔</span>
-      </div>
+      <div class="grid">
+        <div class="panel">
+          <div class="row">
+            <div class="field">
+              <label for="familyMember">Family member name (required)</label>
+              <input id="familyMember" type="text" placeholder="e.g., Vipul / Ajay / Vijay / Mayank / Atharv" />
+            </div>
+            <div class="field">
+              <label for="roleHint">Role (optional)</label>
+              <select id="roleHint">
+                <option value="">— Select (optional)</option>
+                <option>Host family</option>
+                <option>Elder (menu approval)</option>
+                <option>Younger (taste preference)</option>
+                <option>Outstation perspective</option>
+              </select>
+            </div>
 
-      <div class="actions" style="margin-top:10px;">
-        <div class="linkbox" title="Share this link with family. It will contain the selections in the URL.">
-          <span class="muted">Shareable link:</span>
-          <input id="shareUrl" readonly value="" />
-          <button id="copyShare2">Copy</button>
+            <span class="pill"><strong id="selCount">0</strong> dishes selected</span>
+            <span class="pill"><strong id="hotelCount">0</strong> hotel-recommended</span>
+          </div>
+
+          <div class="actions">
+            <button class="btn-primary" id="submitBtn">Submit (Generate share link + download)</button>
+            <button id="downloadJson">Download response (JSON)</button>
+            <button id="copyShare">Copy share link</button>
+            <button id="clearAll">Clear all</button>
+          </div>
+
+          <div class="actions" style="margin-top:10px;">
+            <div class="linkbox" title="Share this link with family. It includes name + selections in the URL.">
+              <span class="muted">Shareable link:</span>
+              <input id="shareUrl" readonly value="" />
+              <button id="copyShare2">Copy</button>
+            </div>
+            <div class="note">
+              Note: GitHub Pages is static. “Submit” creates a share-link and a file to send back. If you want automatic recording to a sheet, tell me and I’ll convert Submit to save into Google Sheets.
+            </div>
+          </div>
         </div>
-        <div class="note">Tip: Open this file in any browser. Use “Copy share link” to send your filled version to family.</div>
       </div>
     </header>
 
@@ -104,25 +119,46 @@
       <table>
         <thead>
           <tr>
-            <th style="width: 190px;">Category</th>
+            <th style="width: 260px;">Category (How many to select)</th>
             <th>Dish</th>
-            <th style="width: 110px; text-align:center;">Selected</th>
-            <th style="width: 220px;">Hotel Recommendation (✔ / ✖)</th>
-            <th style="width: 150px;">Popularity Score (/5)</th>
+            <th style="width: 110px;" class="center">Selected</th>
+            <th style="width: 170px;" class="center">Hotel ✔</th>
+            <th style="width: 150px;">Popularity (/5)</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
       </table>
+
       <div class="footer">
         <div class="note">
-          Popularity score is a practical “crowd acceptance” estimate for wedding banquets (not online ratings). Hotel Recommendation is to be filled after speaking to the banquet team.
+          Popularity score is a practical crowd-acceptance estimate for North Indian wedding banquets (not online ratings).
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    // --- Data (edit freely if your hotel offers different dishes) ---
+    // ---- Category rules to display "how many to select" in Category column ----
+    const categoryRules = {
+      "Welcome Drink": "Select 1",
+      "Vegetarian Appetizers – Paneer": "Select 2 (within Starters)",
+      "Vegetarian Appetizers – Veg / Awadhi": "Select 1 (within Starters)",
+      "Vegetarian Appetizers – Fusion": "Select 1 (within Starters)",
+      "Soup": "Select 1",
+      "Salads": "Select 3",
+      "Main Course – Paneer": "Select 1 (within Mains)",
+      "Main Course – Festive Gravy": "Select 1 (within Mains)",
+      "Main Course – Seasonal Vegetable": "Select 1 (within Mains)",
+      "Lentil / Dal": "Select 1",
+      "Rice Preparation": "Select 1",
+      "Yogurt Preparation": "Select 1",
+      "Indian Breads": "Select any 3",
+      "Indian Dessert": "Select 1",
+      "Western Dessert": "Select 1",
+      "Ice Cream": "Select 1"
+    };
+
+    // ---- Dishes ----
     const rows = [
       { section: "Welcome Drink", dish: "Kesar Badam Milk (Warm)", lko:true, score: 4.6 },
       { section: "Welcome Drink", dish: "Hot Aam Panna", score: 4.2 },
@@ -197,22 +233,29 @@
       { section: "Ice Cream", dish: "Kesar Pista", score: 4.2 },
     ];
 
-    // Stable IDs
-    const makeId = (s) =>
-      s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-
-    const state = {}; // {id: {selected:boolean, hotel:"yes"|"no"|"na"}}
+    // ---- State ----
+    // {id: {selected:boolean, hotel:boolean}}
+    const state = {};
 
     const tbody = document.getElementById("tbody");
     const selCountEl = document.getElementById("selCount");
-    const recYesCountEl = document.getElementById("recYesCount");
+    const hotelCountEl = document.getElementById("hotelCount");
     const shareUrlEl = document.getElementById("shareUrl");
+    const nameEl = document.getElementById("familyMember");
+    const roleEl = document.getElementById("roleHint");
+
+    const makeId = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
     function initState() {
       rows.forEach(r => {
         const id = makeId(r.section + "-" + r.dish);
-        if (!state[id]) state[id] = { selected:false, hotel:"na" };
+        if (!state[id]) state[id] = { selected:false, hotel:false };
       });
+    }
+
+    function categoryLabel(section) {
+      const rule = categoryRules[section] ? ` · ${categoryRules[section]}` : "";
+      return `${section}${rule}`;
     }
 
     function render() {
@@ -225,24 +268,16 @@
 
         const tr = document.createElement("tr");
 
-        // Category (only show when changes, else blank for neatness)
         const tdCat = document.createElement("td");
         tdCat.className = "cat";
-        tdCat.textContent = (r.section !== lastSection) ? r.section : "";
+        tdCat.textContent = (r.section !== lastSection) ? categoryLabel(r.section) : "";
         lastSection = r.section;
 
-        // Dish
         const tdDish = document.createElement("td");
-        const dishWrap = document.createElement("div");
-        dishWrap.className = "dish";
-        const dishText = document.createElement("div");
-        dishText.innerHTML = `<div>${escapeHtml(r.dish)} ${r.lko ? '<span class="lko">LKO</span>' : ''}</div>`;
-        dishWrap.appendChild(dishText);
-        tdDish.appendChild(dishWrap);
+        tdDish.innerHTML = `${escapeHtml(r.dish)} ${r.lko ? '<span class="lko">LKO</span>' : ''}`;
 
-        // Selected checkbox
         const tdSel = document.createElement("td");
-        tdSel.className = "select-col";
+        tdSel.className = "center";
         const cb = document.createElement("input");
         cb.type = "checkbox";
         cb.checked = !!st.selected;
@@ -253,26 +288,22 @@
         });
         tdSel.appendChild(cb);
 
-        // Hotel recommendation dropdown: NA/Yes/No
+        // Hotel recommendation as simple checkbox (your request #3)
         const tdHotel = document.createElement("td");
-        const sel = document.createElement("select");
-        sel.innerHTML = `
-          <option value="na">— Not decided</option>
-          <option value="yes">✔ Recommended</option>
-          <option value="no">✖ Not recommended</option>
-        `;
-        sel.value = st.hotel || "na";
-        sel.addEventListener("change", () => {
-          st.hotel = sel.value;
+        tdHotel.className = "center";
+        const hb = document.createElement("input");
+        hb.type = "checkbox";
+        hb.checked = !!st.hotel;
+        hb.addEventListener("change", () => {
+          st.hotel = hb.checked;
           persistToUrl();
           updateStatsAndShare();
         });
-        tdHotel.appendChild(sel);
+        tdHotel.appendChild(hb);
 
-        // Popularity score
         const tdScore = document.createElement("td");
         tdScore.className = "score";
-        tdScore.textContent = (r.score ?? "").toFixed ? r.score.toFixed(1) : r.score;
+        tdScore.textContent = r.score.toFixed(1);
 
         tr.appendChild(tdCat);
         tr.appendChild(tdDish);
@@ -289,22 +320,27 @@
     function updateStatsAndShare() {
       const ids = Object.keys(state);
       const selectedCount = ids.reduce((a, id) => a + (state[id].selected ? 1 : 0), 0);
-      const recYes = ids.reduce((a, id) => a + (state[id].hotel === "yes" ? 1 : 0), 0);
+      const hotelCount = ids.reduce((a, id) => a + (state[id].hotel ? 1 : 0), 0);
       selCountEl.textContent = selectedCount;
-      recYesCountEl.textContent = recYes;
+      hotelCountEl.textContent = hotelCount;
       shareUrlEl.value = buildShareUrl();
     }
 
-    // --- URL share encoding (no backend needed) ---
-    // Encode only changed states to keep link shorter.
+    // ---- URL share encoding (name + only changes) ----
     function persistToUrl() {
-      const payload = {};
+      const payload = {
+        name: nameEl.value.trim(),
+        role: roleEl.value || "",
+        items: {}
+      };
+
       Object.entries(state).forEach(([id, st]) => {
-        if (st.selected || st.hotel !== "na") payload[id] = st;
+        if (st.selected || st.hotel) payload.items[id] = st;
       });
+
       const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
       const url = new URL(window.location.href);
-      if (Object.keys(payload).length) url.searchParams.set("s", encoded);
+      if (payload.name || Object.keys(payload.items).length) url.searchParams.set("s", encoded);
       else url.searchParams.delete("s");
       history.replaceState(null, "", url.toString());
     }
@@ -320,25 +356,60 @@
       try {
         const json = decodeURIComponent(escape(atob(s)));
         const payload = JSON.parse(json);
-        Object.entries(payload).forEach(([id, st]) => {
+
+        if (payload?.name) nameEl.value = payload.name;
+        if (payload?.role) roleEl.value = payload.role;
+
+        const items = payload?.items || {};
+        Object.entries(items).forEach(([id, st]) => {
           if (state[id]) {
             state[id].selected = !!st.selected;
-            state[id].hotel = (st.hotel === "yes" || st.hotel === "no") ? st.hotel : "na";
+            state[id].hotel = !!st.hotel;
           }
         });
-      } catch (e) {
-        // Ignore malformed URL state
-      }
+      } catch (e) {}
     }
 
-    // --- Utilities ---
+    // ---- Submit behavior (Option A: generate a file + share message) ----
+    function getResponseObject() {
+      const name = nameEl.value.trim();
+      const role = roleEl.value || "";
+      const selections = rows.map(r => {
+        const id = makeId(r.section + "-" + r.dish);
+        const st = state[id];
+        return {
+          category: r.section,
+          dish: r.dish,
+          lko: !!r.lko,
+          popularity: r.score,
+          selected: !!st.selected,
+          hotelRecommended: !!st.hotel
+        };
+      }).filter(x => x.selected || x.hotelRecommended);
+
+      return {
+        title: "Sankalp Manowara Wedding Reception Menu - Veg Gold Selection",
+        venue: "Holiday Inn Lucknow Airport (IHG)",
+        submittedBy: name,
+        role,
+        submittedAt: new Date().toISOString(),
+        responseLink: buildShareUrl(),
+        items: selections
+      };
+    }
+
+    function downloadAsJson(obj, filename) {
+      const blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
     function escapeHtml(str) {
-      return String(str)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+      return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;").replaceAll("'","&#039;");
     }
 
     async function copyText(text) {
@@ -346,7 +417,6 @@
         await navigator.clipboard.writeText(text);
         alert("Copied to clipboard.");
       } catch {
-        // Fallback
         const ta = document.createElement("textarea");
         ta.value = text;
         document.body.appendChild(ta);
@@ -357,32 +427,49 @@
       }
     }
 
-    // --- Buttons ---
+    // ---- Button wiring ----
     document.getElementById("copyShare").addEventListener("click", () => copyText(buildShareUrl()));
     document.getElementById("copyShare2").addEventListener("click", () => copyText(buildShareUrl()));
 
     document.getElementById("downloadJson").addEventListener("click", () => {
-      const out = {
-        venue: "Holiday Inn Lucknow Airport (IHG)",
-        generatedAt: new Date().toISOString(),
-        selections: Object.entries(state).map(([id, st]) => ({ id, ...st })).filter(x => x.selected || x.hotel !== "na")
-      };
-      const blob = new Blob([JSON.stringify(out, null, 2)], { type: "application/json" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "reception-menu-selections.json";
-      a.click();
-      URL.revokeObjectURL(a.href);
+      const name = nameEl.value.trim() || "family-member";
+      downloadAsJson(getResponseObject(), `menu-response-${name.replace(/\s+/g,"-").toLowerCase()}.json`);
+    });
+
+    document.getElementById("submitBtn").addEventListener("click", () => {
+      const name = nameEl.value.trim();
+      if (!name) {
+        alert("Please enter family member name before submitting.");
+        nameEl.focus();
+        return;
+      }
+      persistToUrl();
+
+      const resp = getResponseObject();
+      downloadAsJson(resp, `menu-response-${name.replace(/\s+/g,"-").toLowerCase()}.json`);
+
+      // WhatsApp-friendly message (user can paste)
+      const msg =
+        `Menu selection submitted by: ${name}\n` +
+        `Link: ${resp.responseLink}\n` +
+        `Selected/Marked items: ${resp.items.length}\n\n` +
+        `Please open the link to view my selections.`;
+      copyText(msg);
+      alert("Submitted. A JSON file was downloaded and a WhatsApp-ready message was copied to clipboard.");
     });
 
     document.getElementById("clearAll").addEventListener("click", () => {
-      if (!confirm("Clear all selections and recommendations?")) return;
-      Object.keys(state).forEach(id => { state[id].selected = false; state[id].hotel = "na"; });
+      if (!confirm("Clear all selections and hotel ticks?")) return;
+      Object.keys(state).forEach(id => { state[id].selected = false; state[id].hotel = false; });
       persistToUrl();
       render();
     });
 
-    // --- Boot ---
+    // Persist on name/role change
+    nameEl.addEventListener("input", () => { persistToUrl(); updateStatsAndShare(); });
+    roleEl.addEventListener("change", () => { persistToUrl(); updateStatsAndShare(); });
+
+    // ---- Boot ----
     initState();
     loadFromUrl();
     render();
@@ -390,3 +477,4 @@
   </script>
 </body>
 </html>
+
