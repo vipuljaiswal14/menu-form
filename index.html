@@ -103,6 +103,14 @@
       .card{ border:none; box-shadow:none; }
       .btn{ display:none !important; }
     }
+/* Hide mobile category helper on desktop */
+.mobile-cat { display: none; }
+
+/* Show it only on mobile */
+@media (max-width: 720px) {
+  .mobile-cat { display: block; }
+}
+
   </style>
 </head>
 
@@ -324,9 +332,9 @@
       const tdDish = document.createElement("td");
       tdDish.className = "col-dish";
       const ruleMobile = categoryRules[r.section] ? categoryRules[r.section] : "";
-      tdDish.innerHTML =
-        `<span class="mobile-cat">${esc(r.section)} · <span class="rule">${esc(ruleMobile)}</span></span>` +
-        `${esc(r.dish)} ${r.lko ? '<span class="lko">LKO</span>' : ''}`;
+     tdDish.innerHTML =
+  `<span class="mobile-cat">${esc(r.section)} · <span class="rule">${esc(ruleMobile)}</span></span>` +
+  `<span class="dish-name">${esc(r.dish)}</span> ${r.lko ? '<span class="lko">LKO</span>' : ''}`;
       tr.appendChild(tdDish);
 
       const tdSel = document.createElement("td");
