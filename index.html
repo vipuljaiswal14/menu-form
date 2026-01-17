@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Veg Gold Reception Menu – Family Selection Form</title>
+  <style>
+    :root { --border:#e5e7eb; --text:#111827; --muted:#6b7280; --bg:#ffffff; --chip:#eef2ff; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--text); background:#f8fafc; }
+    .wrap { max-width: 1050px; margin: 24px auto; padding: 0 16px 28px; }
+    .card { background:var(--bg); border:1px solid var(--border); border-radius:14px; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
+    header.card { padding:16px 16px 12px; }
+    h1 { font-size: 18px; margin:0 0 6px; }
+    .meta { color:var(--muted); font-size: 13px; line-height: 1.4; }
+    .actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
+    button, .btn {
+      border: 1px solid var(--border);
+      background:#fff;
+      color:var(--text);
+      border-radius:10px;
+      padding:10px 12px;
+      font-size: 13px;
+      cursor:pointer;
+    }
+    button:hover { background:#f9fafb; }
+    .btn-primary { background:#111827; color:#fff; border-color:#111827; }
+    .btn-primary:hover { background:#0b1220; }
+    .pill { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid var(--border); border-radius:999px; font-size:12px; color:var(--muted); background:#fff; }
+    .pill strong { color:var(--text); }
+    .table-wrap { overflow:auto; border-top:1px solid var(--border); border-bottom-left-radius:14px; border-bottom-right-radius:14px; }
+    table { width:100%; border-collapse: collapse; min-width: 980px; }
+    thead th {
+      position: sticky; top: 0;
+      background:#f9fafb;
+      border-bottom:1px solid var(--border);
+      text-align:left;
+      font-size: 12px;
+      color: var(--muted);
+      padding:10px 12px;
+      z-index:1;
+    }
+    tbody td { border-bottom:1px solid var(--border); padding:10px 12px; vertical-align: top; font-size: 13px; }
+    tbody tr:last-child td { border-bottom:none; }
+    .cat { color: var(--muted); font-weight: 600; white-space: nowrap; }
+    .dish { display:flex; align-items:flex-start; gap:8px; }
+    .lko { font-size: 11px; padding:2px 8px; border-radius:999px; background:var(--chip); border:1px solid #c7d2fe; color:#3730a3; font-weight:600; }
+    .muted { color: var(--muted); font-size: 12px; }
+    .score { font-variant-numeric: tabular-nums; }
+    .select-col { text-align:center; }
+    input[type="checkbox"] { width: 18px; height: 18px; cursor:pointer; }
+    select {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border:1px solid var(--border);
+      background:#fff;
+      font-size: 13px;
+    }
+    .footer { padding: 14px 16px; border-top:1px solid var(--border); display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+    .note { color:var(--muted); font-size: 12px; }
+    .linkbox {
+      flex: 1 1 420px;
+      display:flex; gap:10px; align-items:center;
+      background:#fff; border:1px solid var(--border);
+      border-radius: 12px; padding:10px 12px;
+    }
+    .linkbox input { flex:1; border:none; outline:none; font-size: 12px; color:#111827; }
+    .divider-row td {
+      background:#fcfcfd;
+      color:#374151;
+      font-weight:700;
+      font-size:12px;
+      letter-spacing:.02em;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="card">
+      <h1>Veg Gold Reception Menu – Family Selection Form</h1>
+      <div class="meta">
+        Venue: Holiday Inn Lucknow Airport (IHG) · Season: Winter Evening · Guests: ~200 · <span class="lko">LKO</span> = Lucknow speciality
+      </div>
+
+      <div class="actions">
+        <button class="btn-primary" id="copyShare">Copy share link</button>
+        <button id="downloadJson">Download selections (JSON)</button>
+        <button id="clearAll">Clear all</button>
+        <span class="pill"><strong id="selCount">0</strong> selected</span>
+        <span class="pill"><strong id="recYesCount">0</strong> hotel ✔</span>
+      </div>
+
+      <div class="actions" style="margin-top:10px;">
+        <div class="linkbox" title="Share this link with family. It will contain the selections in the URL.">
+          <span class="muted">Shareable link:</span>
+          <input id="shareUrl" readonly value="" />
+          <button id="copyShare2">Copy</button>
+        </div>
+        <div class="note">Tip: Open this file in any browser. Use “Copy share link” to send your filled version to family.</div>
+      </div>
+    </header>
+
+    <div class="card table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 190px;">Category</th>
+            <th>Dish</th>
+            <th style="width: 110px; text-align:center;">Selected</th>
+            <th style="width: 220px;">Hotel Recommendation (✔ / ✖)</th>
+            <th style="width: 150px;">Popularity Score (/5)</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div class="footer">
+        <div class="note">
+          Popularity score is a practical “crowd acceptance” estimate for wedding banquets (not online ratings). Hotel Recommendation is to be filled after speaking to the banquet team.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Data (edit freely if your hotel offers different dishes) ---
+    const rows = [
+      { section: "Welcome Drink", dish: "Kesar Badam Milk (Warm)", lko:true, score: 4.6 },
+      { section: "Welcome Drink", dish: "Hot Aam Panna", score: 4.2 },
+      { section: "Welcome Drink", dish: "Strawberry Milk", score: 4.0 },
+      { section: "Welcome Drink", dish: "Jaljeera (Mild)", score: 4.1 },
+
+      { section: "Vegetarian Appetizers – Paneer", dish: "Paneer Malai Tikka", score: 4.6 },
+      { section: "Vegetarian Appetizers – Paneer", dish: "Paneer Amritsari", score: 4.5 },
+      { section: "Vegetarian Appetizers – Paneer", dish: "Paneer Kurkura", score: 4.4 },
+      { section: "Vegetarian Appetizers – Paneer", dish: "Achari Paneer Tikka", score: 4.3 },
+
+      { section: "Vegetarian Appetizers – Veg / Awadhi", dish: "Veg Galouti Kebab", lko:true, score: 4.4 },
+      { section: "Vegetarian Appetizers – Veg / Awadhi", dish: "Hara Bhara Kebab", score: 4.3 },
+      { section: "Vegetarian Appetizers – Veg / Awadhi", dish: "Dahi ke Kebab", score: 4.2 },
+
+      { section: "Vegetarian Appetizers – Fusion", dish: "Corn Cheese Balls", score: 4.6 },
+      { section: "Vegetarian Appetizers – Fusion", dish: "Cheese & Jalapeño Pockets", score: 4.5 },
+      { section: "Vegetarian Appetizers – Fusion", dish: "Veg Spring Rolls", score: 4.4 },
+      { section: "Vegetarian Appetizers – Fusion", dish: "Honey Chilli Potato", score: 4.5 },
+
+      { section: "Soup", dish: "Sweet Corn Vegetable Soup", score: 4.4 },
+      { section: "Soup", dish: "Tomato Dhaniya Shorba", score: 4.3 },
+      { section: "Soup", dish: "Cream of Mushroom Soup", score: 4.1 },
+
+      { section: "Salads", dish: "Green Salad", score: 4.2 },
+      { section: "Salads", dish: "Russian / Waldorf Salad", score: 4.3 },
+      { section: "Salads", dish: "Fruit Chaat", score: 4.4 },
+      { section: "Salads", dish: "Pasta Salad", score: 4.1 },
+      { section: "Salads", dish: "Sprout Salad", score: 3.9 },
+
+      { section: "Main Course – Paneer", dish: "Paneer Butter Masala", score: 4.8 },
+      { section: "Main Course – Paneer", dish: "Paneer Lababdar", score: 4.7 },
+      { section: "Main Course – Paneer", dish: "Shahi Paneer", score: 4.6 },
+
+      { section: "Main Course – Festive Gravy", dish: "Malai Kofta", score: 4.7 },
+      { section: "Main Course – Festive Gravy", dish: "Navratan Korma", score: 4.6 },
+      { section: "Main Course – Festive Gravy", dish: "Kaju Curry", score: 4.5 },
+
+      { section: "Main Course – Seasonal Vegetable", dish: "Dum Aloo Banarasi", lko:true, score: 4.5 },
+      { section: "Main Course – Seasonal Vegetable", dish: "Mix Veg Handi", score: 4.3 },
+      { section: "Main Course – Seasonal Vegetable", dish: "Aloo Mutter", score: 4.2 },
+      { section: "Main Course – Seasonal Vegetable", dish: "Seasonal Veg Curry", score: 4.1 },
+
+      { section: "Lentil / Dal", dish: "Dal Makhani", score: 4.9 },
+      { section: "Lentil / Dal", dish: "Dal Panchmel", score: 4.4 },
+      { section: "Lentil / Dal", dish: "Dal Tadka", score: 4.3 },
+
+      { section: "Rice Preparation", dish: "Veg Pulao", score: 4.4 },
+      { section: "Rice Preparation", dish: "Peas Pulao", score: 4.3 },
+      { section: "Rice Preparation", dish: "Jeera Rice", score: 4.2 },
+
+      { section: "Yogurt Preparation", dish: "Boondi Raita", score: 4.3 },
+      { section: "Yogurt Preparation", dish: "Mix Veg Raita", score: 4.2 },
+      { section: "Yogurt Preparation", dish: "Pineapple Raita", score: 4.0 },
+
+      { section: "Indian Breads", dish: "Butter Naan", score: 4.8 },
+      { section: "Indian Breads", dish: "Plain Roti", score: 4.6 },
+      { section: "Indian Breads", dish: "Laccha Paratha", score: 4.7 },
+      { section: "Indian Breads", dish: "Missi Roti", lko:true, score: 4.5 },
+      { section: "Indian Breads", dish: "Garlic Naan", score: 4.6 },
+
+      { section: "Indian Dessert", dish: "Gajar ka Halwa (Hot)", lko:true, score: 4.9 },
+      { section: "Indian Dessert", dish: "Gulab Jamun", score: 4.8 },
+      { section: "Indian Dessert", dish: "Moong Dal Halwa", score: 4.6 },
+
+      { section: "Western Dessert", dish: "Chocolate Truffle Pastry", score: 4.3 },
+      { section: "Western Dessert", dish: "Brownie with Chocolate Sauce", score: 4.4 },
+      { section: "Western Dessert", dish: "Red Velvet Pastry", score: 4.2 },
+
+      { section: "Ice Cream", dish: "Vanilla", score: 4.3 },
+      { section: "Ice Cream", dish: "Strawberry", score: 4.1 },
+      { section: "Ice Cream", dish: "Kesar Pista", score: 4.2 },
+    ];
+
+    // Stable IDs
+    const makeId = (s) =>
+      s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+    const state = {}; // {id: {selected:boolean, hotel:"yes"|"no"|"na"}}
+
+    const tbody = document.getElementById("tbody");
+    const selCountEl = document.getElementById("selCount");
+    const recYesCountEl = document.getElementById("recYesCount");
+    const shareUrlEl = document.getElementById("shareUrl");
+
+    function initState() {
+      rows.forEach(r => {
+        const id = makeId(r.section + "-" + r.dish);
+        if (!state[id]) state[id] = { selected:false, hotel:"na" };
+      });
+    }
+
+    function render() {
+      tbody.innerHTML = "";
+      let lastSection = null;
+
+      rows.forEach(r => {
+        const id = makeId(r.section + "-" + r.dish);
+        const st = state[id];
+
+        const tr = document.createElement("tr");
+
+        // Category (only show when changes, else blank for neatness)
+        const tdCat = document.createElement("td");
+        tdCat.className = "cat";
+        tdCat.textContent = (r.section !== lastSection) ? r.section : "";
+        lastSection = r.section;
+
+        // Dish
+        const tdDish = document.createElement("td");
+        const dishWrap = document.createElement("div");
+        dishWrap.className = "dish";
+        const dishText = document.createElement("div");
+        dishText.innerHTML = `<div>${escapeHtml(r.dish)} ${r.lko ? '<span class="lko">LKO</span>' : ''}</div>`;
+        dishWrap.appendChild(dishText);
+        tdDish.appendChild(dishWrap);
+
+        // Selected checkbox
+        const tdSel = document.createElement("td");
+        tdSel.className = "select-col";
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.checked = !!st.selected;
+        cb.addEventListener("change", () => {
+          st.selected = cb.checked;
+          persistToUrl();
+          updateStatsAndShare();
+        });
+        tdSel.appendChild(cb);
+
+        // Hotel recommendation dropdown: NA/Yes/No
+        const tdHotel = document.createElement("td");
+        const sel = document.createElement("select");
+        sel.innerHTML = `
+          <option value="na">— Not decided</option>
+          <option value="yes">✔ Recommended</option>
+          <option value="no">✖ Not recommended</option>
+        `;
+        sel.value = st.hotel || "na";
+        sel.addEventListener("change", () => {
+          st.hotel = sel.value;
+          persistToUrl();
+          updateStatsAndShare();
+        });
+        tdHotel.appendChild(sel);
+
+        // Popularity score
+        const tdScore = document.createElement("td");
+        tdScore.className = "score";
+        tdScore.textContent = (r.score ?? "").toFixed ? r.score.toFixed(1) : r.score;
+
+        tr.appendChild(tdCat);
+        tr.appendChild(tdDish);
+        tr.appendChild(tdSel);
+        tr.appendChild(tdHotel);
+        tr.appendChild(tdScore);
+
+        tbody.appendChild(tr);
+      });
+
+      updateStatsAndShare();
+    }
+
+    function updateStatsAndShare() {
+      const ids = Object.keys(state);
+      const selectedCount = ids.reduce((a, id) => a + (state[id].selected ? 1 : 0), 0);
+      const recYes = ids.reduce((a, id) => a + (state[id].hotel === "yes" ? 1 : 0), 0);
+      selCountEl.textContent = selectedCount;
+      recYesCountEl.textContent = recYes;
+      shareUrlEl.value = buildShareUrl();
+    }
+
+    // --- URL share encoding (no backend needed) ---
+    // Encode only changed states to keep link shorter.
+    function persistToUrl() {
+      const payload = {};
+      Object.entries(state).forEach(([id, st]) => {
+        if (st.selected || st.hotel !== "na") payload[id] = st;
+      });
+      const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+      const url = new URL(window.location.href);
+      if (Object.keys(payload).length) url.searchParams.set("s", encoded);
+      else url.searchParams.delete("s");
+      history.replaceState(null, "", url.toString());
+    }
+
+    function buildShareUrl() {
+      return window.location.href;
+    }
+
+    function loadFromUrl() {
+      const url = new URL(window.location.href);
+      const s = url.searchParams.get("s");
+      if (!s) return;
+      try {
+        const json = decodeURIComponent(escape(atob(s)));
+        const payload = JSON.parse(json);
+        Object.entries(payload).forEach(([id, st]) => {
+          if (state[id]) {
+            state[id].selected = !!st.selected;
+            state[id].hotel = (st.hotel === "yes" || st.hotel === "no") ? st.hotel : "na";
+          }
+        });
+      } catch (e) {
+        // Ignore malformed URL state
+      }
+    }
+
+    // --- Utilities ---
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        alert("Copied to clipboard.");
+      } catch {
+        // Fallback
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        alert("Copied to clipboard.");
+      }
+    }
+
+    // --- Buttons ---
+    document.getElementById("copyShare").addEventListener("click", () => copyText(buildShareUrl()));
+    document.getElementById("copyShare2").addEventListener("click", () => copyText(buildShareUrl()));
+
+    document.getElementById("downloadJson").addEventListener("click", () => {
+      const out = {
+        venue: "Holiday Inn Lucknow Airport (IHG)",
+        generatedAt: new Date().toISOString(),
+        selections: Object.entries(state).map(([id, st]) => ({ id, ...st })).filter(x => x.selected || x.hotel !== "na")
+      };
+      const blob = new Blob([JSON.stringify(out, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "reception-menu-selections.json";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    document.getElementById("clearAll").addEventListener("click", () => {
+      if (!confirm("Clear all selections and recommendations?")) return;
+      Object.keys(state).forEach(id => { state[id].selected = false; state[id].hotel = "na"; });
+      persistToUrl();
+      render();
+    });
+
+    // --- Boot ---
+    initState();
+    loadFromUrl();
+    render();
+    persistToUrl();
+  </script>
+</body>
+</html>
