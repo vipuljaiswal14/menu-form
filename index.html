@@ -2,435 +2,247 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sankalp Manowara Wedding Reception Menu - Veg Gold Selection</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CVP Research & Consulting</title>
   <style>
     :root{
-      --border:#e5e7eb; --text:#111827; --muted:#6b7280; --bg:#ffffff;
-      --chip:#eef2ff; --chipborder:#c7d2fe; --chiptext:#3730a3;
+      --bg:#0b1220;
+      --card:#121b2f;
+      --text:#e8eefc;
+      --muted:#b7c3df;
+      --brand:#7bd84a;
+      --line:rgba(255,255,255,.10);
+      --max:1100px;
     }
-    body{ margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--text); background:#f8fafc; }
-    .wrap{ max-width:1100px; margin:18px auto; padding:0 12px 24px; }
-    .card{ background:var(--bg); border:1px solid var(--border); border-radius:14px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
-    header.card{ padding:14px 14px 10px; }
-    h1{ font-size:18px; margin:0 0 10px; line-height:1.25; }
-
-    .topbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-    .topbar input{
-      flex:1 1 260px; border:1px solid var(--border); border-radius:10px;
-      padding:10px 12px; font-size:13px; outline:none; background:#fff;
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#070b14,var(--bg));color:var(--text)}
+    a{color:inherit}
+    .wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+    header{position:sticky;top:0;background:rgba(7,11,20,.8);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);z-index:10}
+    nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.3px}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--brand)}
+    .navlinks{display:flex;flex-wrap:wrap;gap:14px;font-size:14px;color:var(--muted)}
+    .navlinks a{text-decoration:none}
+    .navlinks a:hover{color:var(--text)}
+    .btn{display:inline-block;padding:10px 14px;border-radius:10px;background:var(--brand);color:#08110a;font-weight:700;text-decoration:none}
+    .btn.secondary{background:transparent;border:1px solid var(--line);color:var(--text)}
+    section{padding:56px 0;border-bottom:1px solid var(--line)}
+    h1{font-size:40px;line-height:1.1;margin:0 0 12px}
+    h2{font-size:26px;margin:0 0 16px}
+    p{color:var(--muted);line-height:1.6;margin:0 0 14px}
+    .hero{padding:56px 0 40px}
+    .heroGrid{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;align-items:start}
+    .card{background:rgba(18,27,47,.65);border:1px solid var(--line);border-radius:16px;padding:18px}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .tag{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:13px}
+    .kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+    .kpi b{font-size:20px;color:var(--text)}
+    .muted{color:var(--muted)}
+    .list{margin:10px 0 0;padding-left:18px;color:var(--muted);line-height:1.6}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    footer{padding:28px 0}
+    @media (max-width: 920px){
+      .heroGrid,.grid3,.grid2,.split{grid-template-columns:1fr}
+      h1{font-size:34px}
     }
-    .btn{
-      border:1px solid var(--border); border-radius:10px; padding:10px 12px;
-      font-size:13px; cursor:pointer; white-space:nowrap;
-      background:#fff; color:var(--text);
-    }
-    .btn-primary{ background:#111827; color:#fff; border-color:#111827; }
-    .btn-primary:hover{ background:#0b1220; }
-    .btn:hover{ background:#f9fafb; }
-    .status{ margin-top:8px; font-size:12px; color:var(--muted); min-height:16px; }
-
-    .table-wrap{ margin-top:12px; border-radius:14px; overflow:hidden; }
-    table{ width:100%; border-collapse:collapse; table-layout:fixed; }
-    thead th{
-      background:#f9fafb; border-bottom:1px solid var(--border);
-      text-align:left; font-size:12px; color:var(--muted); padding:10px 10px;
-    }
-    tbody td{
-      border-bottom:1px solid var(--border); padding:10px 10px;
-      font-size:13px; vertical-align:top; background:#fff; word-wrap:break-word;
-    }
-    tbody tr:last-child td{ border-bottom:none; }
-
-    /* Desktop column widths - keep category tighter */
-    th.col-cat, td.col-cat{ width:26%; }
-    th.col-dish, td.col-dish{ width:46%; }
-    th.col-sel, td.col-sel{ width:9%; text-align:center; }
-    
-    th.col-score, td.col-score{ width:10%; }
-
-    .cat{ color:var(--muted); font-weight:700; font-size:12px; line-height:1.25; }
-    .cat .rule{ font-weight:600; color:#374151; }
-    .lko{
-      font-size:11px; padding:2px 8px; border-radius:999px;
-      background:var(--chip); border:1px solid var(--chipborder);
-      color:var(--chiptext); font-weight:700; margin-left:6px; display:inline-block;
-    }
-    input[type="checkbox"]{ width:18px; height:18px; cursor:pointer; }
-    .score{ font-variant-numeric:tabular-nums; }
-
-    /* Mobile: stacked rows, no horizontal scroll */
-    @media (max-width:720px){
-      thead{ display:none; }
-      table, tbody, tr, td{ display:block; width:100%; }
-      tbody tr{ border-bottom:10px solid #f8fafc; }
-      tbody td{ border-bottom:none; }
-      td.col-cat{ display:none; } /* category moves into dish cell */
-      td.col-dish{ padding:12px 12px 10px; }
-      .mobile-cat{ display:block; font-size:12px; color:var(--muted); font-weight:700; margin-bottom:6px; }
-      .mobile-cat .rule{ font-weight:600; color:#374151; }
-      td.col-sel, td.col-score{
-        display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center;
-        padding:10px 12px; border-top:1px solid var(--border);
-      }
-      td.col-sel::before{ content:"Selected"; color:var(--muted); font-size:12px; font-weight:600; }
-      
-      td.col-score::before{ content:"Popularity (/5)"; color:var(--muted); font-size:12px; font-weight:600; }
-    }
-
-    /* Summary view */
-    .hidden{ display:none !important; }
-    .summary-card{ padding:14px; }
-    .summary-header{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; }
-    .summary-header h2{ margin:0; font-size:16px; }
-    .summary-meta{ color:var(--muted); font-size:12px; margin-top:6px; }
-    .summary-grid{ display:grid; grid-template-columns:1fr; gap:12px; margin-top:12px; }
-    .summary-box{ border:1px solid var(--border); border-radius:12px; padding:12px; background:#fff; }
-    .summary-box h3{ margin:0 0 8px; font-size:13px; color:#111827; }
-    .summary-list{ margin:0; padding-left:18px; color:#111827; }
-    .summary-list li{ margin:6px 0; }
-    .kpi{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-    .pill{ display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid var(--border); border-radius:999px; font-size:12px; color:var(--muted); background:#fff; }
-    .pill strong{ color:var(--text); }
-
-    /* Print/PDF styling */
-    @media print{
-      body{ background:#fff; }
-      .wrap{ max-width:none; margin:0; padding:0; }
-      #editView, #editHeaderActions{ display:none !important; }
-      #summaryView{ display:block !important; border:none; box-shadow:none; }
-      .card{ border:none; box-shadow:none; }
-      .btn{ display:none !important; }
-    }
-/* Hide mobile category helper on desktop */
-.mobile-cat { display: none; }
-
-/* Show it only on mobile */
-@media (max-width: 720px) {
-  .mobile-cat { display: block; }
-}
-
   </style>
 </head>
-
 <body>
+<header>
   <div class="wrap">
-
-    <!-- EDIT VIEW -->
-    <header class="card" id="editView">
-      <h1>Sankalp Manowara Wedding Reception Menu - Veg Gold Selection</h1>
-      <div class="topbar" id="editHeaderActions">
-        <input id="familyMember" type="text" placeholder="Enter your name (required)" />
-        <button class="btn btn-primary" id="submitBtn">Submit</button>
-        <button class="btn" id="clearBtn">Clear</button>
+    <nav>
+      <div class="brand"><span class="dot"></span> CVP Research & Consulting</div>
+      <div class="navlinks">
+        <a href="#story">Our Story</a>
+        <a href="#services">Services</a>
+        <a href="#packages">Packages</a>
+        <a href="#methods">Methods</a>
+        <a href="#case-studies">Case Studies</a>
+        <a href="#team">Team</a>
+        <a href="#contact">Contact</a>
       </div>
-      <div class="status" id="status"></div>
+      <a class="btn" href="#contact">Book a discussion</a>
+    </nav>
+  </div>
+</header>
 
-      <div class="card table-wrap" style="margin-top:12px;">
-        <table>
-          <thead>
-            <tr>
-              <th class="col-cat">Category</th>
-              <th class="col-dish">Dish</th>
-              <th class="col-sel">Selected</th>
-              <th class="col-score">Popularity</th>
-            </tr>
-          </thead>
-          <tbody id="tbody"></tbody>
-        </table>
-      </div>
-    </header>
-
-    <!-- SUMMARY VIEW -->
-    <div class="card hidden" id="summaryView">
-      <div class="summary-card">
-        <div class="summary-header">
-          <div>
-            <h2>Submission Summary</h2>
-            <div class="summary-meta">
-              <span id="sumName"></span> · <span id="sumTime"></span>
-            </div>
-            <div class="kpi">
-              <span class="pill"><strong id="sumSelectedCount">0</strong> selected</span>
-            </div>
+<main>
+  <section class="hero" id="home">
+    <div class="wrap">
+      <div class="heroGrid">
+        <div>
+          <div class="tag">Qualitative • Quantitative • UI/UX</div>
+          <h1>Business-oriented consumer insights, delivered with agile execution.</h1>
+          <p>CVP Research & Consulting provides end-to-end research and strategy support—co-creating the brief, selecting the best-fit methodology, executing high-quality fieldwork, and delivering story-led insights with clear decisions and next steps.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+            <a class="btn" href="#contact">Book a discussion</a>
+            <a class="btn secondary" href="#packages">View packages</a>
           </div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn btn-primary" id="downloadPdfBtn">Download PDF</button>
-            <button class="btn" id="backBtn">Back to edit</button>
+
+          <div class="kpi">
+            <div class="card"><b>12+ years</b><div class="muted">research experience</div></div>
+            <div class="card"><b>50+ cities</b><div class="muted">scaled operations</div></div>
+            <div class="card"><b>18+ industries</b><div class="muted">cross-category learnings</div></div>
           </div>
         </div>
 
-        <div class="summary-grid">
-          <div class="summary-box">
-            <h3>Selected Dishes</h3>
-            <ul class="summary-list" id="selectedList"></ul>
-            <div class="summary-meta" id="selectedEmpty" style="display:none;">No dishes selected.</div>
-          </div>
-
-          
+        <div class="card">
+          <h2>Contact</h2>
+          <p class="muted">Share your requirement at:</p>
+          <p><b>vipul@compiledviewplates.com</b><br><b>nikhil@compiledviewplates.com</b></p>
+          <p class="muted" style="margin-top:12px">Prefer a quick brief call? Use the form below.</p>
+          <form onsubmit="event.preventDefault(); alert('Form submitted (demo). Connect this to your email/CRM later.');">
+            <input required placeholder="Name" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:#0c1426;color:var(--text);margin-bottom:10px">
+            <input required placeholder="Company" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:#0c1426;color:var(--text);margin-bottom:10px">
+            <input required type="email" placeholder="Email" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:#0c1426;color:var(--text);margin-bottom:10px">
+            <textarea required placeholder="What do you want to solve?" rows="4" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:#0c1426;color:var(--text);margin-bottom:10px"></textarea>
+            <button class="btn" type="submit" style="border:none;cursor:pointer;width:100%">Send</button>
+          </form>
         </div>
       </div>
     </div>
+  </section>
 
+  <section id="story">
+    <div class="wrap">
+      <h2>Our Story</h2>
+      <p>We bring strong research fundamentals, a business-first lens, and the ability to adapt quickly to evolving requirements.</p>
+
+      <div class="grid3">
+        <div class="card">
+          <h3>Strong fundamentals</h3>
+          <p>12+ years of research across multiple industries and categories, delivering innovative solutions.</p>
+        </div>
+        <div class="card">
+          <h3>Business-focused insights</h3>
+          <p>Simplifying research through innovative approaches, reduced cost and quicker timelines—delivered in story format.</p>
+        </div>
+        <div class="card">
+          <h3>Fast & adaptive</h3>
+          <p>We continuously adapt to emerging information in research and in consumers’ lives to provide sharper solutions.</p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <h3>Journey</h3>
+        <ul class="list">
+          <li>2012: Started with data analytics; specialized in large qualitative studies</li>
+          <li>2014: Expanded to end-to-end market research and brand strategy</li>
+          <li>2016: Scaled to 50+ cities; launched full-scale quantitative operations</li>
+          <li>2020: Added lean UI/UX research for app-first startups</li>
+          <li>2021: Built deeper insights across 18+ industries</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="services">
+    <div class="wrap">
+      <h2>Services</h2>
+      <div class="grid3">
+        <div class="card">
+          <h3>Conventional Research</h3>
+          <p>Qual + Quant coverage across India—DIs, FGDs, product clinics, brand equity, pricing, packaging, ad testing, concept testing and more.</p>
+        </div>
+        <div class="card">
+          <h3>Brand Positioning</h3>
+          <p>Positioning/repositioning using projective techniques and consumer analytics—built for decision-making and alignment.</p>
+        </div>
+        <div class="card">
+          <h3>UI/UX Research</h3>
+          <p>Lean UX research to improve journeys, confidence and conversions—ideal for digital-first products and platforms.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="packages">
+    <div class="wrap">
+      <h2>Packages</h2>
+      <p>Clear starting points, designed around common business questions.</p>
+      <div class="grid3">
+        <div class="card"><h3>Explore your category</h3><p class="muted">Starting at ₹4L</p></div>
+        <div class="card"><h3>Create brand/market/product strategy</h3><p class="muted">Starting at ₹4L</p></div>
+        <div class="card"><h3>Quick tests (pre/post launch)</h3><p class="muted">Starting at ₹2L</p></div>
+        <div class="card"><h3>Problem & solution identification</h3><p class="muted">Starting at ₹3.5L</p></div>
+        <div class="card"><h3>Track your performance</h3><p class="muted">Starting at ₹4L</p></div>
+        <div class="card"><h3>Discovery with data</h3><p class="muted">Starting at ₹2.5L</p></div>
+      </div>
+      <div style="margin-top:14px">
+        <a class="btn" href="#contact">Book a discussion</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="methods">
+    <div class="wrap">
+      <h2>How we work</h2>
+      <div class="grid2">
+        <div class="card">
+          <h3>Our process</h3>
+          <ol class="list">
+            <li>Co-create the brief to identify the real research problem</li>
+            <li>Select and adapt the best-fit methodology</li>
+            <li>Execute data collection under strong quality supervision</li>
+            <li>Deliver story-led analysis with actionable recommendations</li>
+          </ol>
+        </div>
+        <div class="card">
+          <h3>What makes CVP distinct</h3>
+          <ul class="list">
+            <li>Co-creation: define need, sharpen problem statement, align the data plan</li>
+            <li>Business understanding: evaluate challenges and market solutions effectively</li>
+            <li>Agile execution: researchers stay involved throughout—brief to report</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="case-studies">
+    <div class="wrap">
+      <h2>Case studies</h2>
+      <p>Selected examples across categories and research types.</p>
+      <div class="grid3">
+        <div class="card"><h3>Blinkit</h3><p class="muted">Cohort-specific needs in quick commerce; qual + quant.</p></div>
+        <div class="card"><h3>Tata 1mg</h3><p class="muted">Brand track + journey improvements; qual + quant + UI/UX.</p></div>
+        <div class="card"><h3>Bosch</h3><p class="muted">Service positioning concepts tested; recommended “Always On”.</p></div>
+        <div class="card"><h3>Zomato</h3><p class="muted">Cohort-level engagement drivers; qual + quant.</p></div>
+        <div class="card"><h3>Kotak Mahindra Bank</h3><p class="muted">Pan-India digital banking expectations; qualitative.</p></div>
+        <div class="card"><h3>Navi</h3><p class="muted">UI studies for confidence/usability in digital loans; qual + UI/UX.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="team">
+    <div class="wrap">
+      <h2>Team</h2>
+      <div class="grid3">
+        <div class="card"><h3>Vipul</h3><p class="muted">Founder, Research Head & Insights Director (15 years).</p></div>
+        <div class="card"><h3>Nikhil</h3><p class="muted">Research Manager (9+ years; Quant & Qual).</p></div>
+        <div class="card"><h3>Tarun</h3><p class="muted">Mentor & Quantitative Lead (25+ years; ex-IMRB/Kantar).</p></div>
+        <div class="card"><h3>Swati</h3><p class="muted">Researcher (20+ years; coordination & quality supervision).</p></div>
+        <div class="card"><h3>Naveen</h3><p class="muted">Field Head (30+ years; pan-India operations).</p></div>
+        <div class="card"><h3>Operations team</h3><p class="muted">Research & field coordination support across projects.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <h2>Let’s discuss your problem statement</h2>
+      <p>Email us at <b>vipul@compiledviewplates.com</b> or <b>nikhil@compiledviewplates.com</b>.</p>
+      <a class="btn" href="#home">Back to top</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="muted">© CVP Research & Consulting. All rights reserved.</p>
   </div>
-
-<script>
-  const categoryRules = {
-    "Welcome Drink": "Select 1",
-    "Vegetarian Appetizers – Paneer": "Select 2 (within Starters)",
-    "Vegetarian Appetizers – Veg / Awadhi": "Select 1 (within Starters)",
-    "Vegetarian Appetizers – Fusion": "Select 1 (within Starters)",
-    "Soup": "Select 1",
-    "Salads": "Select 3",
-    "Main Course – Paneer": "Select 1 (within Mains)",
-    "Main Course – Festive Gravy": "Select 1 (within Mains)",
-    "Main Course – Seasonal Vegetable": "Select 1 (within Mains)",
-    "Lentil / Dal": "Select 1",
-    "Rice Preparation": "Select 1",
-    "Yogurt Preparation": "Select 1",
-    "Indian Breads": "Select any 3",
-    "Indian Dessert": "Select 1",
-    "Western Dessert": "Select 1",
-    "Ice Cream": "Select 1"
-  };
-
-  const rows = [
-    { section:"Welcome Drink", dish:"Kesar Badam Milk (Warm)", lko:true, score:4.6 },
-    { section:"Welcome Drink", dish:"Hot Aam Panna", score:4.2 },
-    { section:"Welcome Drink", dish:"Strawberry Milk", score:4.0 },
-    { section:"Welcome Drink", dish:"Jaljeera (Mild)", score:4.1 },
-
-    { section:"Vegetarian Appetizers – Paneer", dish:"Paneer Malai Tikka", score:4.6 },
-    { section:"Vegetarian Appetizers – Paneer", dish:"Paneer Amritsari", score:4.5 },
-    { section:"Vegetarian Appetizers – Paneer", dish:"Paneer Kurkura", score:4.4 },
-    { section:"Vegetarian Appetizers – Paneer", dish:"Achari Paneer Tikka", score:4.3 },
-
-    { section:"Vegetarian Appetizers – Veg / Awadhi", dish:"Veg Galouti Kebab", lko:true, score:4.4 },
-    { section:"Vegetarian Appetizers – Veg / Awadhi", dish:"Hara Bhara Kebab", score:4.3 },
-    { section:"Vegetarian Appetizers – Veg / Awadhi", dish:"Dahi ke Kebab", score:4.2 },
-
-    { section:"Vegetarian Appetizers – Fusion", dish:"Corn Cheese Balls", score:4.6 },
-    { section:"Vegetarian Appetizers – Fusion", dish:"Cheese & Jalapeño Pockets", score:4.5 },
-    { section:"Vegetarian Appetizers – Fusion", dish:"Veg Spring Rolls", score:4.4 },
-    { section:"Vegetarian Appetizers – Fusion", dish:"Honey Chilli Potato", score:4.5 },
-
-    { section:"Soup", dish:"Sweet Corn Vegetable Soup", score:4.4 },
-    { section:"Soup", dish:"Tomato Dhaniya Shorba", score:4.3 },
-    { section:"Soup", dish:"Cream of Mushroom Soup", score:4.1 },
-
-    { section:"Salads", dish:"Green Salad", score:4.2 },
-    { section:"Salads", dish:"Russian / Waldorf Salad", score:4.3 },
-    { section:"Salads", dish:"Fruit Chaat", score:4.4 },
-    { section:"Salads", dish:"Pasta Salad", score:4.1 },
-    { section:"Salads", dish:"Sprout Salad", score:3.9 },
-
-    { section:"Main Course – Paneer", dish:"Paneer Butter Masala", score:4.8 },
-    { section:"Main Course – Paneer", dish:"Paneer Lababdar", score:4.7 },
-    { section:"Main Course – Paneer", dish:"Shahi Paneer", score:4.6 },
-
-    { section:"Main Course – Festive Gravy", dish:"Malai Kofta", score:4.7 },
-    { section:"Main Course – Festive Gravy", dish:"Navratan Korma", score:4.6 },
-    { section:"Main Course – Festive Gravy", dish:"Kaju Curry", score:4.5 },
-
-    { section:"Main Course – Seasonal Vegetable", dish:"Dum Aloo Banarasi", lko:true, score:4.5 },
-    { section:"Main Course – Seasonal Vegetable", dish:"Mix Veg Handi", score:4.3 },
-    { section:"Main Course – Seasonal Vegetable", dish:"Aloo Mutter", score:4.2 },
-    { section:"Main Course – Seasonal Vegetable", dish:"Seasonal Veg Curry", score:4.1 },
-
-    { section:"Lentil / Dal", dish:"Dal Makhani", score:4.9 },
-    { section:"Lentil / Dal", dish:"Dal Panchmel", score:4.4 },
-    { section:"Lentil / Dal", dish:"Dal Tadka", score:4.3 },
-
-    { section:"Rice Preparation", dish:"Veg Pulao", score:4.4 },
-    { section:"Rice Preparation", dish:"Peas Pulao", score:4.3 },
-    { section:"Rice Preparation", dish:"Jeera Rice", score:4.2 },
-
-    { section:"Yogurt Preparation", dish:"Boondi Raita", score:4.3 },
-    { section:"Yogurt Preparation", dish:"Mix Veg Raita", score:4.2 },
-    { section:"Yogurt Preparation", dish:"Pineapple Raita", score:4.0 },
-
-    { section:"Indian Breads", dish:"Butter Naan", score:4.8 },
-    { section:"Indian Breads", dish:"Plain Roti", score:4.6 },
-    { section:"Indian Breads", dish:"Laccha Paratha", score:4.7 },
-    { section:"Indian Breads", dish:"Missi Roti", lko:true, score:4.5 },
-    { section:"Indian Breads", dish:"Garlic Naan", score:4.6 },
-
-    { section:"Indian Dessert", dish:"Gajar ka Halwa (Hot)", lko:true, score:4.9 },
-    { section:"Indian Dessert", dish:"Gulab Jamun", score:4.8 },
-    { section:"Indian Dessert", dish:"Moong Dal Halwa", score:4.6 },
-
-    { section:"Western Dessert", dish:"Chocolate Truffle Pastry", score:4.3 },
-    { section:"Western Dessert", dish:"Brownie with Chocolate Sauce", score:4.4 },
-    { section:"Western Dessert", dish:"Red Velvet Pastry", score:4.2 },
-
-    { section:"Ice Cream", dish:"Vanilla", score:4.3 },
-    { section:"Ice Cream", dish:"Strawberry", score:4.1 },
-    { section:"Ice Cream", dish:"Kesar Pista", score:4.2 },
-  ];
-
-  const state = {}; // id -> {selected, hotel}
-  const tbody = document.getElementById("tbody");
-  const statusEl = document.getElementById("status");
-  const nameEl = document.getElementById("familyMember");
-
-  const editView = document.getElementById("editView");
-  const summaryView = document.getElementById("summaryView");
-
-  const sumName = document.getElementById("sumName");
-  const sumTime = document.getElementById("sumTime");
-  const sumSelectedCount = document.getElementById("sumSelectedCount");
-  
-  const selectedList = document.getElementById("selectedList");
-  const selectedEmpty = document.getElementById("selectedEmpty");
-  
-  const makeId = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
-  const esc = (s) => String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
-
-  function initState(){
-    rows.forEach(r => {
-      const id = makeId(r.section + "-" + r.dish);
-      state[id] = { selected:false };
-    });
-  }
-
-  function computeSectionCounts(){
-    const counts = {};
-    rows.forEach(r => counts[r.section] = (counts[r.section] || 0) + 1);
-    return counts;
-  }
-
-  function renderTable(){
-    tbody.innerHTML = "";
-    const counts = computeSectionCounts();
-    const rendered = {};
-
-    rows.forEach(r => {
-      const id = makeId(r.section + "-" + r.dish);
-      const st = state[id];
-
-      const tr = document.createElement("tr");
-
-      if (!rendered[r.section]) {
-        const tdCat = document.createElement("td");
-        tdCat.className = "col-cat";
-        tdCat.rowSpan = counts[r.section];
-        const rule = categoryRules[r.section] ? ` · <span class="rule">${esc(categoryRules[r.section])}</span>` : "";
-        tdCat.innerHTML = `<div class="cat">${esc(r.section)}${rule}</div>`;
-        tr.appendChild(tdCat);
-        rendered[r.section] = true;
-      }
-
-      const tdDish = document.createElement("td");
-      tdDish.className = "col-dish";
-      const ruleMobile = categoryRules[r.section] ? categoryRules[r.section] : "";
-     tdDish.innerHTML =
-  `<span class="mobile-cat">${esc(r.section)} · <span class="rule">${esc(ruleMobile)}</span></span>` +
-  `<span class="dish-name">${esc(r.dish)}</span> ${r.lko ? '<span class="lko">LKO</span>' : ''}`;
-      tr.appendChild(tdDish);
-
-      const tdSel = document.createElement("td");
-      tdSel.className = "col-sel";
-      const cb = document.createElement("input");
-      cb.type = "checkbox";
-      cb.checked = !!st.selected;
-      cb.addEventListener("change", () => st.selected = cb.checked);
-      tdSel.appendChild(cb);
-      tr.appendChild(tdSel);
-
-      const tdScore = document.createElement("td");
-      tdScore.className = "col-score score";
-      tdScore.textContent = r.score.toFixed(1);
-      tr.appendChild(tdScore);
-
-      tbody.appendChild(tr);
-    });
-  }
-
-  function getSelections(){
-    const selected = [];
-    
-    return { selected, hotel };
-  }
-
-  function buildSummary(){
-    const name = nameEl.value.trim();
-    const now = new Date();
-    const { selected, hotel } = getSelections();
-
-    sumName.textContent = name ? `Name: ${name}` : "Name: —";
-    sumTime.textContent = `Submitted: ${now.toLocaleString()}`;
-    sumSelectedCount.textContent = selected.length;
-    sumHotelCount.textContent = hotel.length;
-
-    selectedList.innerHTML = "";
-    hotelList.innerHTML = "";
-
-    if (selected.length === 0) {
-      selectedEmpty.style.display = "block";
-    } else {
-      selectedEmpty.style.display = "none";
-      selected.forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = item;
-        selectedList.appendChild(li);
-      });
-    }
-
-    if (hotel.length === 0) {
-      hotelEmpty.style.display = "block";
-    } else {
-      hotelEmpty.style.display = "none";
-      hotel.forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = item;
-        hotelList.appendChild(li);
-      });
-    }
-  }
-
-  function showSummary(){
-    editView.classList.add("hidden");
-    summaryView.classList.remove("hidden");
-  }
-
-  function showEdit(){
-    summaryView.classList.add("hidden");
-    editView.classList.remove("hidden");
-  }
-
-  document.getElementById("submitBtn").addEventListener("click", () => {
-    const name = nameEl.value.trim();
-    if (!name) {
-      statusEl.textContent = "Please enter your name before submitting.";
-      nameEl.focus();
-      return;
-    }
-    statusEl.textContent = "";
-    buildSummary();
-    showSummary();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-
-  document.getElementById("downloadPdfBtn").addEventListener("click", () => {
-    // This opens print dialog; on phone/laptop user can Save as PDF
-    window.print();
-  });
-
-  document.getElementById("backBtn").addEventListener("click", () => {
-    showEdit();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-
-  document.getElementById("clearBtn").addEventListener("click", () => {
-    if (!confirm("Clear all selections?")) return;
-    Object.keys(state).forEach(id => { state[id].selected=false; state[id].hotel=false; });
-    statusEl.textContent = "Cleared.";
-    renderTable();
-  });
-
-  initState();
-  renderTable();
-</script>
+</footer>
 </body>
 </html>
